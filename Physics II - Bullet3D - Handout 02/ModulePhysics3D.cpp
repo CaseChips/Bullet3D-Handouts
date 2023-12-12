@@ -5,6 +5,15 @@
 
 // TODO 1: ...and the 3 libraries based on how we compile (Debug or Release)
 // use the _DEBUG preprocessor define
+#ifdef _DEBUG
+	#pragma comment (lib, "Bullet/libx86/BulletDynamics_debug.lib")
+	#pragma comment (lib, "Bullet/libx86/BulletCollision_debug.lib")
+	#pragma comment (lib, "Bullet/libx86/LinearMath_debug.lib")
+#else
+	#pragma comment (lib, "Bullet/libx86/BulletDynamics.lib")
+	#pragma comment (lib, "Bullet/libx86/BulletCollision.lib")
+	#pragma comment (lib, "Bullet/libx86/LinearMath.lib")
+#endif
 
 ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -14,8 +23,21 @@ ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(
 	// TODO 2: Create collision configuration, dispacher
 	// broad _phase and solver
 
+	//COLLISION CONFIGURATION
+	collisionConfiguration = new btDefaultCollisionConfiguration();
+
+	//DISPATCHER
+	dispatcher = new btCollisionDispatcher (collisionConfiguration);
+
+	//BROADPHASE
+	broadphase = new btDbvtBroadphase();
+
+	//SOLVER
+	solver = new btSequentialImpulseConstraintSolver();
+
+	
 	//TODO 4: Uncomment the creation of the DebugDrawer
-	//debug_draw = new DebugDrawer();
+	debug_draw = new DebugDrawer();
 }
 
 // Destructor
@@ -24,19 +46,27 @@ ModulePhysics3D::~ModulePhysics3D()
 	delete debug_draw;
 
 	// TODO 2: and destroy them!
-
+	delete collisionConfiguration;
+	delete dispatcher;
+	delete broadphase;
+	delete solver;
 }
 
 // ---------------------------------------------------------
 bool ModulePhysics3D::Start()
 {
 	LOG("Creating Physics environment");
-
+	
 	// TODO 3: Create the world and set default gravity
 	// Have gravity defined in a macro!
 
+	world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+	world->setGravity(GRAVITY);
+
 	//TODO 4: Uncomment and link the debug Drawer with our newly created Physics world
-	// world->setDebugDrawer(debug_draw);
+
+	world->setDebugDrawer(debug_draw);
+
 
 	{
 		// TODO 6: Create a big rectangle as ground
@@ -50,6 +80,7 @@ bool ModulePhysics3D::Start()
 update_status ModulePhysics3D::PreUpdate(float dt)
 {
 	// TODO 5: step the world
+	world->stepSimulation(dt, 15);
 
 	return UPDATE_CONTINUE;
 }
