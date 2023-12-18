@@ -71,6 +71,19 @@ bool ModulePhysics3D::Start()
 	{
 		// TODO 6: Create a big rectangle as ground
 		// Big rectangle as ground
+
+		btCollisionShape* colShape = new btBoxShape(btVector3(200.0f, 2.0f, 200.0f));
+
+		mat4x4 glMatrix = IdentityMatrix;
+		glMatrix.translate(0.f, -2.f, 0.f);
+		btTransform startTransform;
+		startTransform.setFromOpenGLMatrix(&glMatrix);
+
+		btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+		btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, myMotionState, colShape);
+
+		btRigidBody* body = new btRigidBody(rbInfo);
+		world->addRigidBody(body);
 	}
 
 	return true;
@@ -94,11 +107,15 @@ update_status ModulePhysics3D::Update(float dt)
 	if(debug == true)
 	{
 		//TODO 4: Uncomment the render of the debug render
-		//world->debugDrawWorld();
+		world->debugDrawWorld();
 		
 		if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		{
 			// TODO 7: Create a Solid Sphere when pressing 1 on camera position
+			s = new Sphere(5000);
+			s->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+			s->Render();
+
 		}
 	}
 
@@ -117,13 +134,14 @@ bool ModulePhysics3D::CleanUp()
 	LOG("Destroying 3D Physics simulation");
 
 	// TODO 3: ... and destroy the world here!
+	delete world;
 
 	return true;
 }
 
 // =============================================
 //TODO 4: Uncomment the definition of the Debug Drawer
-/*
+
 void DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 {
 	line.origin.Set(from.getX(), from.getY(), from.getZ());
@@ -158,4 +176,3 @@ int	 DebugDrawer::getDebugMode() const
 {
 	return mode;
 }
-*/

@@ -26,6 +26,8 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	Sphere* s;
+
 private:
 
 	bool debug;
@@ -56,4 +58,5 @@ public:
 	DebugDrawModes mode;
 	Line line;
 	Primitive point;
+	
 };
