@@ -101,30 +101,34 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 // ---------------------------------------------------------
 update_status ModulePhysics3D::Update(float dt)
 {
-	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		debug = !debug;
+	}
 
-	if(debug == true)
-	{
+	if (debug == true) {
 		//TODO 4: Uncomment the render of the debug render
 		world->debugDrawWorld();
-		
-		if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-		{
-			// TODO 7: Create a Solid Sphere when pressing 1 on camera position
-			s = new Sphere(5000);
-			s->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-			s->Render();
 
+		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
+			// TODO 7: Create a Solid Sphere when pressing 1 on camera position
+			s = new Sphere();
+			/*s->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);*/
+			s->SetPos(0,0,0);
+		}
+
+		if (s != nullptr) {
+			s->Render();
 		}
 	}
 
+	
 	return UPDATE_CONTINUE;
 }
 
 // ---------------------------------------------------------
 update_status ModulePhysics3D::PostUpdate(float dt)
 {
+
 	return UPDATE_CONTINUE;
 }
 

@@ -26,7 +26,7 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	Sphere* s;
+	Sphere* s =  nullptr;
 
 private:
 
