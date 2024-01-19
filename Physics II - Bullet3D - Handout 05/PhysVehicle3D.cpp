@@ -39,6 +39,7 @@ void PhysVehicle3D::Render()
 	}
 
 	Cube chassis(info.chassis_size.x, info.chassis_size.y, info.chassis_size.z);
+	chassis.color = Green;
 	vehicle->getChassisWorldTransform().getOpenGLMatrix(&chassis.transform);
 	btQuaternion q = vehicle->getChassisWorldTransform().getRotation();
 	btVector3 offset(info.chassis_offset.x, info.chassis_offset.y, info.chassis_offset.z);
@@ -48,7 +49,30 @@ void PhysVehicle3D::Render()
 	chassis.transform.M[13] += offset.getY();
 	chassis.transform.M[14] += offset.getZ();
 
+	Cube cap(info.cap_size.x, info.cap_size.y, info.cap_size.z);
+	cap.color = Red;
+	vehicle->getChassisWorldTransform().getOpenGLMatrix(&cap.transform);
+	btQuaternion q2 = vehicle->getChassisWorldTransform().getRotation();
+	btVector3 offset2(info.cap_offset.x, info.cap_offset.y, info.cap_offset.z);
+	offset = offset2.rotate(q2.getAxis(), q2.getAngle());
 
+	cap.transform.M[12] += offset2.getX();
+	cap.transform.M[13] += offset2.getY();
+	cap.transform.M[14] += offset2.getZ();
+
+	Cube cap2(info.cap_size2.x, info.cap_size2.y, info.cap_size2.z);
+	cap2.color = Red;
+	vehicle->getChassisWorldTransform().getOpenGLMatrix(&cap2.transform);
+	btQuaternion q3 = vehicle->getChassisWorldTransform().getRotation();
+	btVector3 offset3(info.cap_offset2.x, info.cap_offset2.y, info.cap_offset2.z);
+	offset3 = offset3.rotate(q3.getAxis(), q3.getAngle());
+
+	cap2.transform.M[12] += offset3.getX();
+	cap2.transform.M[13] += offset3.getY();
+	cap2.transform.M[14] += offset3.getZ();
+
+	cap.Render();
+	cap2.Render();
 	chassis.Render();
 }
 
