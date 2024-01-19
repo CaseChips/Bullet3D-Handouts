@@ -111,9 +111,11 @@ update_status ModulePhysics3D::Update(float dt)
 
 		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
 			// TODO 7: Create a Solid Sphere when pressing 1 on camera position
-			s = new Sphere();
-			/*s->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);*/
-			s->SetPos(0,0,0);
+			btCollisionShape* colShape = new btSphereShape(1.0f);
+			btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z)));
+			btRigidBody::btRigidBodyConstructionInfo rbInfo(1.0f, motionState, colShape);
+			btRigidBody* body = new btRigidBody(rbInfo);
+			world->addRigidBody(body);
 		}
 
 		if (s != nullptr) {
